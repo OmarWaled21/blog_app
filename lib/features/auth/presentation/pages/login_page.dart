@@ -47,7 +47,10 @@ class _LoginPageState extends State<LoginPage> {
                 isObsecure: true,
               ),
               const SizedBox(height: 5),
-              const AuthGradientButton(buttonText: 'Login'),
+              AuthGradientButton(
+                buttonText: 'Login',
+                onPressed: () {},
+              ),
               const SizedBox(height: 5),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
