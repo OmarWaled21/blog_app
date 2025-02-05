@@ -18,8 +18,19 @@ void main() async {
   ));
 }
 
-class BlogApp extends StatelessWidget {
+class BlogApp extends StatefulWidget {
   const BlogApp({super.key});
+
+  @override
+  State<BlogApp> createState() => _BlogAppState();
+}
+
+class _BlogAppState extends State<BlogApp> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthBloc>().add(AuthIsUsserLoggedIn());
+  }
 
   @override
   Widget build(BuildContext context) {
