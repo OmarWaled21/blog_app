@@ -43,4 +43,14 @@ class BlogRepositoryImpl implements BlogRepository {
       return left(Failure(msg: e.msg));
     }
   }
+
+  @override
+  Future<Either<Failure, List<Blog>>> getAllBlogs() async {
+    try {
+      final blogs = await remoteDataSource.getAllBlogs();
+      return right(blogs);
+    } on ServerException catch (e) {
+      return left(Failure(msg: e.msg));
+    }
+  }
 }
