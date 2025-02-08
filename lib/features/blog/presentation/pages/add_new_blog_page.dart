@@ -4,13 +4,13 @@ import 'package:blog_app/core/common/cubits/app_user/app_user_cubit.dart';
 import 'package:blog_app/core/common/widgets/loader.dart';
 import 'package:blog_app/core/helper_extention/media_query_extention.dart';
 import 'package:blog_app/core/helper_extention/navigator_extention.dart';
-import 'package:blog_app/core/theme/app_pallete.dart';
 import 'package:blog_app/core/utils/pick_image.dart';
 import 'package:blog_app/core/utils/show_snackbar.dart';
 import 'package:blog_app/features/blog/presentation/bloc/blog_bloc.dart';
 import 'package:blog_app/features/blog/presentation/pages/blog_page.dart';
 import 'package:blog_app/features/blog/presentation/widgets/blog_editor.dart';
-import 'package:dotted_border/dotted_border.dart';
+import 'package:blog_app/features/blog/presentation/widgets/blog_topics.dart';
+import 'package:blog_app/features/blog/presentation/widgets/no_image_dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -122,69 +122,20 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
                           )
                         : GestureDetector(
                             onTap: selectImage,
-                            child: DottedBorder(
-                              color: AppPallete.borderColor,
-                              dashPattern: [10, 4],
-                              borderType: BorderType.RRect,
-                              strokeCap: StrokeCap.round,
-                              radius: const Radius.circular(10),
-                              child: SizedBox(
-                                height: 150,
-                                width: context.screenWidth,
-                                child: const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.folder_open, size: 40),
-                                    SizedBox(height: 15),
-                                    Text(
-                                      'Select your image',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            child: const NoImageDottedBorder(),
                           ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            'Technology',
-                            'Buisness',
-                            'Programming',
-                            'Entertainment',
-                          ]
-                              .map(
-                                (e) => Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (selectedTopics.contains(e)) {
-                                        selectedTopics.remove(e);
-                                      } else {
-                                        selectedTopics.add(e);
-                                      }
-                                      setState(() {});
-                                    },
-                                    child: Chip(
-                                      label: Text(e),
-                                      color: selectedTopics.contains(e)
-                                          ? const WidgetStatePropertyAll(
-                                              AppPallete.gradient1)
-                                          : null,
-                                      side: selectedTopics.contains(e)
-                                          ? null
-                                          : const BorderSide(
-                                              color: AppPallete.borderColor,
-                                            ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
+                      child: BlogTopics(
+                        selectedTopics: selectedTopics,
+                        onTopicSelected: (topic) {
+                          if (selectedTopics.contains(topic)) {
+                            selectedTopics.remove(topic);
+                          } else {
+                            selectedTopics.add(topic);
+                          }
+                          setState(() {});
+                        },
                       ),
                     ),
                     BlogEditor(
