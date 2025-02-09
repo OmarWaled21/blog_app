@@ -5,7 +5,6 @@ import 'package:blog_app/features/auth/data/datasources/auth_remote_data_source.
 import 'package:blog_app/features/auth/data/models/user_model.dart';
 import 'package:blog_app/features/auth/domain/repository/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -21,12 +20,12 @@ class AuthRepositoryImpl implements AuthRepository {
         final session = remoteDataSource.currentUserSession;
 
         if (session == null) {
-          left(Failure(msg: 'User not logged in'));
+          return left(Failure(msg: 'User not logged in'));
         }
 
-        return Right(
+        return right(
           UserModel(
-            id: session!.user.id,
+            id: session.user.id,
             name: '',
             email: session.user.email ?? '',
           ),
@@ -35,11 +34,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final user = await remoteDataSource.getCurrentUserData();
       if (user == null) {
-        left(Failure(msg: 'User not logged in'));
+        return left(Failure(msg: 'User not logged in'));
       }
-      return right(user!);
-    } on AuthException catch (e) {
-      return left(Failure(msg: e.message));
+      return right(user);
     } on ServerException catch (e) {
       return left(Failure(msg: e.msg));
     }
@@ -76,12 +73,10 @@ class AuthRepositoryImpl implements AuthRepository {
   ) async {
     try {
       if (!await internetConnection.isConnected()) {
-        return Left(Failure(msg: 'No internet connection'));
+        return left(Failure(msg: 'No internet connection'));
       }
       final user = await fn();
       return right(user);
-    } on AuthException catch (e) {
-      return left(Failure(msg: e.message));
     } on ServerException catch (e) {
       return left(Failure(msg: e.msg));
     }
